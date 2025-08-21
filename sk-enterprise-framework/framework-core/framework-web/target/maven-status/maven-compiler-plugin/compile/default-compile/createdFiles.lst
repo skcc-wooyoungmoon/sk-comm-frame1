@@ -1,0 +1,2 @@
+com\sk\framework\web\config\WebAutoConfiguration.class
+com\sk\framework\web\exception\GlobalExceptionHandler.class

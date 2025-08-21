@@ -1,0 +1,3 @@
+com\sk\framework\data\config\DataAutoConfiguration.class
+com\sk\framework\data\repository\BaseRepository.class
+com\sk\framework\data\specification\BaseSpecification.class

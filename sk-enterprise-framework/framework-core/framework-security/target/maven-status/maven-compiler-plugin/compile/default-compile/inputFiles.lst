@@ -1,0 +1,8 @@
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-security\src\main\java\com\sk\framework\security\exception\InvalidTokenException.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-security\src\main\java\com\sk\framework\security\config\SecurityAutoConfiguration.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-security\src\main\java\com\sk\framework\security\exception\InsufficientPrivilegesException.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-security\src\main\java\com\sk\framework\security\jwt\JwtTokenProvider.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-security\src\main\java\com\sk\framework\security\filter\JwtAuthenticationFilter.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-security\src\main\java\com\sk\framework\security\aspect\RequireRoleAspect.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-security\src\main\java\com\sk\framework\security\exception\SecurityException.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-security\src\main\java\com\sk\framework\security\config\SecurityProperties.java

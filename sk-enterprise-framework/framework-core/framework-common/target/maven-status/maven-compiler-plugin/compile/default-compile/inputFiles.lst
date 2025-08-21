@@ -1,0 +1,14 @@
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\entity\BaseEntity.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\dto\ApiResponse.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\dto\PageResponse.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\annotation\AutoCache.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\util\ValidationUtils.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\exception\EntityNotFoundException.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\util\StringUtils.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\annotation\RequireRole.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\service\BaseService.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\controller\BaseController.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\annotation\AutoCrud.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\annotation\EnableSkFramework.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\exception\FrameworkException.java
+C:\Users\09796\Documents\GitHub\sk-comm-frame\sk-enterprise-framework\framework-core\framework-common\src\main\java\com\sk\framework\common\config\SkFrameworkConfiguration.java

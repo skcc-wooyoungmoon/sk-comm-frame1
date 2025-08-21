@@ -1,0 +1,160 @@
+spring:
+  profiles:
+    active: local
+
+  # 데이터소스 설정 - Rule에 따른 HikariCP 튜닝
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+
+  # JPA 설정
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        use_sql_comments: true
+
+  # H2 Console 설정 (개발용)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # JSON 직렬화 설정
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    date-format: yyyy-MM-dd HH:mm:ss
+
+# 로깅 설정 - Rule에 따른 JSON 로그, 트레이스ID(MDC)
+logging:
+  level:
+    com.sk.sample: DEBUG
+    com.sk.framework: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId}] %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId}] %logger{36} - %msg%n"
+  file:
+    name: logs/sk-sample.log
+
+# Actuator 설정 - Rule에 따른 모니터링
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,loggers
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# OpenAPI 설정 - Rule에 따른 API 문서화
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: alpha
+    tags-sorter: alpha
+  packages-to-scan: com.sk.sample
+
+# SK Framework 커스텀 설정
+sk:
+  framework:
+    # 캐시 설정
+    cache:
+      enabled: true
+      default-ttl: 3600
+      redis:
+        host: localhost
+        port: 6379
+        timeout: 3000
+    # 보안 설정
+    security:
+      jwt:
+        secret: sk-framework-jwt-secret-key-2025
+        expiration: 86400000
+    # 외부 API 설정 예시
+    external:
+      api:
+        timeout: 5000
+        retry-count: 3
+        circuit-breaker:
+          enabled: true
+          failure-threshold: 5
+          timeout: 10000
+
+---
+# 로컬 환경 설정
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:h2:mem:localdb
+
+logging:
+  level:
+    root: INFO
+    com.sk.sample: DEBUG
+
+---
+# 개발 환경 설정
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://dev-db:5432/sk_sample
+    username: ${DB_USER:dev_user}
+    password: ${DB_PASSWORD:dev_pass}
+
+logging:
+  level:
+    root: WARN
+    com.sk.sample: INFO
+
+---
+# 운영 환경 설정
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://prod-db:5432/sk_sample
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 50
+
+logging:
+  level:
+    root: ERROR
+    com.sk.sample: WARN
+

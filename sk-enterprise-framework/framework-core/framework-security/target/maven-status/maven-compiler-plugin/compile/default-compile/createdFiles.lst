@@ -1,0 +1,12 @@
+com\sk\framework\security\exception\InsufficientPrivilegesException.class
+com\sk\framework\security\jwt\JwtTokenProvider.class
+com\sk\framework\security\config\SecurityProperties$Jwt.class
+com\sk\framework\security\config\SecurityProperties$Cors.class
+com\sk\framework\security\aspect\RequireRoleAspect$1.class
+com\sk\framework\security\jwt\JwtTokenProvider$TokenType.class
+com\sk\framework\security\config\SecurityAutoConfiguration.class
+com\sk\framework\security\config\SecurityProperties.class
+com\sk\framework\security\exception\InvalidTokenException.class
+com\sk\framework\security\exception\SecurityException.class
+com\sk\framework\security\aspect\RequireRoleAspect.class
+com\sk\framework\security\filter\JwtAuthenticationFilter.class
