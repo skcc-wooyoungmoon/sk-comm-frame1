@@ -23,6 +23,15 @@ import java.time.LocalDateTime;
 @Setter
 public abstract class BaseEntity {
 
+    /**
+     * 낙관적 락(Optimistic Lock) 버전.
+     * <p>동시 수정 시 JPA가 이 값을 비교하여 {@code OptimisticLockingFailureException}을 발생시킵니다.
+     * {@code @RetryOnConflict} 어노테이션과 함께 사용하면 충돌 시 자동 재시도가 가능합니다.</p>
+     */
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

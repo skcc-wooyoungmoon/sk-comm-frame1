@@ -354,6 +354,26 @@ sk:
 
 ---
 
+## 5-1. ✅ 거래(트랜잭션) 패턴 표준 (2026-08-13 반영)
+
+정합성이 중요한 거래는 `framework-transaction` 모듈의 표준 패턴을 사용합니다.
+상세 가이드: [`framework-docs/transaction-pattern-guide.md`](sk-enterprise-framework/framework-docs/transaction-pattern-guide.md)
+
+- **ACID/트랜잭션 경계**: 서비스는 클래스 `@Transactional(readOnly=true)` + 쓰기 메소드 override. 격리/전파는 명시.
+- **멱등성**: 결제·주문·적립 등 부작용 거래는 `@Idempotent(key=...)`로 "정확히 한 번" 처리. DB 유니크 제약을 2차 방어선으로 병행.
+- **동시성**: `BaseEntity`의 `@Version`(낙관적 락) + `@RetryOnConflict`로 충돌 자동 재시도. 강한 순서 보장은 `@DistributedLock` 또는 비관적 락.
+- **아웃박스**: "DB 변경 + 메시지 발행"은 `OutboxRecorder`로 같은 트랜잭션에 기록하고 `OutboxRelay`가 발행(이중 쓰기 금지). 소비자는 멱등 전제.
+- **분산 트랜잭션**: 여러 서비스에 걸친 거래는 `SagaOrchestrator`(보상 트랜잭션)로 최종 일관성 확보.
+- **커밋 후 부수효과**: 알림/이벤트는 `TransactionSupport.runAfterCommit`으로 커밋 확정 후 실행.
+
+```java
+@DistributedLock(key = "'order-product:' + #req.productId")
+@Idempotent(key = "'order:' + #req.orderNo")   // 중복 방지
+@RetryOnConflict(maxAttempts = 3)              // 낙관적 락 충돌 재시도
+@Transactional
+public OrderDto placeOrder(PlaceOrderRequest req) { ... }
+```
+
 ## 6. 품질 기준
 - 테스트 커버리지 80% 이상
 - 순환 복잡도 10 이하

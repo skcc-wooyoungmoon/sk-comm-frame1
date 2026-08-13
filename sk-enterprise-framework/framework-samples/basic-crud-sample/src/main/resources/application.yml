@@ -109,6 +109,13 @@ sk:
           enabled: true
           failure-threshold: 5
           timeout: 10000
+    # 거래(트랜잭션) 패턴 - 아웃박스 릴레이 설정
+    transaction:
+      outbox:
+        enabled: true
+        poll-interval-ms: 5000
+        batch-size: 100
+        max-retry: 5
 
 ---
 # 로컬 환경 설정

@@ -12,11 +12,13 @@ import lombok.NoArgsConstructor;
 
 /**
  * @className    : User
- * @description  : 사용자 엔티티 - Rule에 따른 도메인 기반 패키지 구조와 Bean Validation 적용
- * @modification : 2025.08.21(프레임워크팀) Rule 업데이트에 따른 구현
+ * @description  : 사용자 엔티티 - 도메인 기반 패키지 구조와 Bean Validation 적용.
+ *                 수정은 setter가 아닌 도메인 메소드로만 수행하여 낙관적 락(@Version)과
+ *                 정합성을 유지한다.
+ * @modification : 2026.08.13(프레임워크팀) role 필드 및 도메인 수정 메소드 추가
  * @author       : SK Framework Team
- * @date         : 2025.08.21
- * @version      : 2.0
+ * @date         : 2026.08.13
+ * @version      : 3.0
  */
 @Entity
 @Table(name = "tb_user")
@@ -51,11 +53,58 @@ public class User extends BaseEntity {
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, length = 20)
+    @Builder.Default
+    private UserRole role = UserRole.USER;
+
+    /**
+     * 사용자 상태.
+     */
     public enum UserStatus {
         ACTIVE, INACTIVE, SUSPENDED
     }
 
-    // 비즈니스 메서드
+    /**
+     * 사용자 권한(역할).
+     */
+    public enum UserRole {
+        ADMIN, MANAGER, USER
+    }
+
+    // ===== 도메인 수정 메소드 (managed 엔티티를 직접 변경하여 낙관적 락 유지) =====
+
+    /**
+     * 프로필(사용자명/전화번호/이메일)을 수정합니다. null 인자는 변경하지 않습니다.
+     */
+    public void updateProfile(String username, String email, String phone) {
+        if (username != null) {
+            this.username = username;
+        }
+        if (email != null) {
+            this.email = email;
+        }
+        if (phone != null) {
+            this.phone = phone;
+        }
+    }
+
+    /**
+     * 권한을 변경합니다.
+     */
+    public void changeRole(UserRole role) {
+        this.role = role;
+    }
+
+    /**
+     * 상태를 변경합니다.
+     */
+    public void changeStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    // ===== 상태 편의 메소드 =====
+
     public void activate() {
         this.status = UserStatus.ACTIVE;
     }
@@ -74,7 +123,7 @@ public class User extends BaseEntity {
 
     @Override
     public String toString() {
-        return String.format("User[id=%d, username='%s', email='%s', status='%s']",
-                getId(), username, email, status);
+        return String.format("User[id=%d, username='%s', email='%s', status='%s', role='%s']",
+                getId(), username, email, status, role);
     }
 }

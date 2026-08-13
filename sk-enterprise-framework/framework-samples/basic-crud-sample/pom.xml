@@ -52,6 +52,13 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- 거래(트랜잭션) 패턴 모듈: 멱등성/재시도/분산락/아웃박스/SAGA -->
+        <dependency>
+            <groupId>com.sk</groupId>
+            <artifactId>framework-transaction</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Database -->
         <dependency>
             <groupId>com.h2database</groupId>

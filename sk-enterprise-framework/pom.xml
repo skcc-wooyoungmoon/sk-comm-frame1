@@ -65,12 +65,21 @@
     </dependencies>
 
     <build>
+        <!--
+            spring-boot-maven-plugin(repackage)은 실행 가능한 애플리케이션(main class 보유) 모듈에서만
+            적용되어야 하므로 pluginManagement로 이동한다. 라이브러리 모듈(core/*)은 repackage하지 않는다.
+            실행 모듈(framework-samples/*)은 각자 build/plugins에서 이 플러그인을 선언해 repackage를 수행한다.
+        -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
