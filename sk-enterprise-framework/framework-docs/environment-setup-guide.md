@@ -12,20 +12,25 @@
 
 | 도구 | 버전 | 확인 명령 |
 |------|------|-----------|
-| JDK | 17 이상 (21 권장) | `java -version` |
+| JDK | **25** (LTS) | `java -version` |
 | Maven | 3.9 이상 | `mvn -version` |
 | Node.js | 20 이상 (22 권장) | `node -v` |
 | npm | 10 이상 | `npm -v` |
 | Git | 2.x | `git --version` |
 | IDE | IntelliJ IDEA / VS Code | - |
 
-### 1.1 JDK 설치
+### 1.1 JDK 설치 (JDK 25 LTS 필수)
 
-- macOS: `brew install openjdk@21`
-- Windows: [Adoptium Temurin 21](https://adoptium.net/) 설치
-- Linux: `sudo apt install openjdk-21-jdk`
+- macOS: `brew install openjdk@25`
+- Windows: [Adoptium Temurin 25](https://adoptium.net/) 설치
+- Linux: `sudo apt install openjdk-25-jdk` (또는 Temurin 25 tarball)
 
-`JAVA_HOME`을 설정하고 `java -version`이 17+ 를 가리키는지 확인합니다.
+`JAVA_HOME`을 JDK 25로 설정하고 `java -version`이 **25** 를 가리키는지 확인합니다.
+
+> 이 프로젝트는 Java 25(LTS)로 빌드/실행됩니다. Spring Boot **3.5.6**을 사용하며,
+> JDK 23+에서 애노테이션 프로세서(Lombok 등)가 기본 비활성화되는 변경에 대응해
+> 루트 pom의 `maven-compiler-plugin`에 `annotationProcessorPaths`를 명시했습니다.
+> JDK 25 미만에서는 빌드되지 않습니다.
 
 ### 1.2 Maven / Node 설치
 

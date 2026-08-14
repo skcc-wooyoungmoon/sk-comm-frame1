@@ -18,7 +18,7 @@
 ## 1. 시작하기 전 체크리스트
 
 ### ✅ 필수 확인 사항
-- [ ] Java 17 이상 설치
+- [ ] Java 25 (LTS) 설치
 - [ ] IDE 설정 (IntelliJ IDEA 권장)
 - [ ] SK Enterprise Framework 프로젝트 클론
 - [ ] 최신 Rule 문서 숙지 (2025.08.21 버전)

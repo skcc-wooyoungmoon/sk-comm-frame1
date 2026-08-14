@@ -17,22 +17,26 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.5.6</version>
         <relativePath/>
     </parent>
-    
+
     <modules>
         <module>framework-core</module>
         <module>framework-samples</module>
         <module>framework-starters</module>
     </modules>
-    
+
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <!-- JDK 25 (LTS)로 상향. Spring Boot 3.5.x는 Java 25를 지원한다. -->
+        <java.version>25</java.version>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <maven.compiler.release>25</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.2.0</spring.boot.version>
-        <lombok.version>1.18.30</lombok.version>
+        <spring.boot.version>3.5.6</spring.boot.version>
+        <!-- Java 25 지원 Lombok -->
+        <lombok.version>1.18.46</lombok.version>
     </properties>
     
     <dependencyManagement>
@@ -83,11 +87,26 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.13.0</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <release>25</release>
                     <encoding>UTF-8</encoding>
+                    <!--
+                        JDK 23+는 클래스패스에서만 발견된 애노테이션 프로세서를 기본 실행하지 않는다.
+                        Lombok/Spring 설정 프로세서가 동작하도록 명시적으로 프로세서 경로를 지정한다.
+                    -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                            <version>${spring.boot.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>
