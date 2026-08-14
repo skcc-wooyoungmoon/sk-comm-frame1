@@ -8,10 +8,10 @@ import lombok.Builder;
 /**
  * @className    : UserDto
  * @description  : 사용자 응답 DTO - Rule에 따른 응답 전용 DTO
- * @modification : 2025.08.21(프레임워크팀) Rule 업데이트에 따른 구현
+ * @modification : 2026.08.13(프레임워크팀) role/version 필드 추가
  * @author       : SK Framework Team
- * @date         : 2025.08.21
- * @version      : 2.0
+ * @date         : 2026.08.13
+ * @version      : 3.0
  */
 @Getter
 @NoArgsConstructor
@@ -24,6 +24,8 @@ public class UserDto {
     private String email;
     private String phone;
     private String status;
+    private String role;
+    private Long version;
     private String createdAt;
     private String updatedAt;
 }

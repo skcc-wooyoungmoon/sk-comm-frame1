@@ -37,13 +37,39 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 프레임워크 비즈니스 예외
+     * 프레임워크 비즈니스 예외.
+     * 동시성/멱등성/분산락 계열 에러코드는 409 Conflict로, 그 외는 400으로 매핑한다.
      */
     @ExceptionHandler(FrameworkException.class)
     public ResponseEntity<ApiResponse<Void>> handleFrameworkException(FrameworkException ex) {
-        log.error("Framework exception: {}", ex.getMessage(), ex);
+        HttpStatus status = resolveStatus(ex.getErrorCode());
+        if (status == HttpStatus.CONFLICT) {
+            log.warn("Conflict: code={}, msg={}", ex.getErrorCode(), ex.getMessage());
+        } else {
+            log.error("Framework exception: code={}, msg={}", ex.getErrorCode(), ex.getMessage(), ex);
+        }
+        return ResponseEntity.status(status)
+                .body(ApiResponse.failure(ex.getErrorCode(), ex.getMessage()));
+    }
+
+    /**
+     * 잘못된 인자(비즈니스 검증 실패 등) → 400 Bad Request.
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
+        log.warn("Illegal argument: {}", ex.getMessage());
         return ResponseEntity.badRequest()
-                .body(ApiResponse.failure("BUSINESS_ERROR", ex.getMessage()));
+                .body(ApiResponse.failure("BAD_REQUEST", ex.getMessage()));
+    }
+
+    private HttpStatus resolveStatus(String errorCode) {
+        if (errorCode == null) {
+            return HttpStatus.BAD_REQUEST;
+        }
+        return switch (errorCode) {
+            case "CONCURRENCY_CONFLICT", "IDEMPOTENCY_CONFLICT", "DISTRIBUTED_LOCK_FAILED" -> HttpStatus.CONFLICT;
+            default -> HttpStatus.BAD_REQUEST;
+        };
     }
 
     /**

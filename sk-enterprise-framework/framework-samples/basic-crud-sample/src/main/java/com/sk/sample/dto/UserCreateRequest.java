@@ -33,4 +33,7 @@ public class UserCreateRequest {
 
     @Size(max = 20, message = "전화번호는 20자를 초과할 수 없습니다.")
     private String phone;
+
+    /** 권한 (미지정 시 USER). 예: ADMIN, MANAGER, USER */
+    private String role;
 }

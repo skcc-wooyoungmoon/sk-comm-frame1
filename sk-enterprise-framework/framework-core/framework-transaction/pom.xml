@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.sk</groupId>
+        <artifactId>framework-core</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>framework-transaction</artifactId>
+    <packaging>jar</packaging>
+
+    <name>SK Framework Transaction</name>
+    <description>ACID/멱등성/동시성/아웃박스/SAGA 등 엔터프라이즈 거래(트랜잭션) 패턴 모듈</description>
+
+    <dependencies>
+        <!-- 프레임워크 공통 (BaseEntity, ApiResponse, 예외 등) -->
+        <dependency>
+            <groupId>com.sk</groupId>
+            <artifactId>framework-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 트랜잭션/JPA (Outbox 엔티티, @Transactional, 낙관적 락) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- AOP (멱등성/재시도/분산락 어드바이스) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Configuration Processor -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>

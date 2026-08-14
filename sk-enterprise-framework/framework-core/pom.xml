@@ -20,6 +20,7 @@
 
     <modules>
         <module>framework-common</module>
+        <module>framework-transaction</module>
         <module>framework-web</module>
         <module>framework-data</module>
         <module>framework-security</module>
