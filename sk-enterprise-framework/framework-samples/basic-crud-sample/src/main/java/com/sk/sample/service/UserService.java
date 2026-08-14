@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class UserService extends BaseService<User, Long> {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     protected JpaRepository<User, Long> getRepository() {
@@ -91,6 +93,7 @@ public class UserService extends BaseService<User, Long> {
                 .phone(request.getPhone())
                 .status(User.UserStatus.ACTIVE)
                 .role(parseRole(request.getRole(), User.UserRole.USER))
+                .password(passwordEncoder.encode("password")) // 데모: 신규 사용자 기본 비밀번호
                 .build();
 
         return convertToDto(userRepository.save(user));

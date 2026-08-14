@@ -95,11 +95,14 @@ sk:
         host: localhost
         port: 6379
         timeout: 3000
-    # 보안 설정
+    # 보안 설정 (framework-security JWT)
     security:
+      enabled: true
       jwt:
-        secret: sk-framework-jwt-secret-key-2025
-        expiration: 86400000
+        # HS512 서명 키는 64바이트 이상 필요 (데모용, 운영에서는 환경변수/시크릿으로 주입)
+        secret-key: sk-framework-jwt-hs512-secret-key-please-change-in-production-0123456789
+        access-token-expiration: 3600
+        issuer: SK Framework
     # 외부 API 설정 예시
     external:
       api:

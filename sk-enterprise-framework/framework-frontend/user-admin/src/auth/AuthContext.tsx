@@ -56,6 +56,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  // 클라이언트가 401을 만나면(토큰 만료 등) 자동 로그아웃 → 로그인 화면으로 유도
+  useEffect(() => {
+    const onUnauthorized = () => {
+      localStorage.removeItem(USER_KEY);
+      setUser(null);
+    };
+    window.addEventListener('auth:unauthorized', onUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', onUnauthorized);
+  }, []);
+
   const can = useCallback((permission: Permission) => hasPermission(user?.role, permission), [user]);
 
   const value = useMemo<AuthContextValue>(

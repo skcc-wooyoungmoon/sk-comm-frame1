@@ -2,14 +2,23 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { monitoringApi } from '../api/adminApi';
 import { ApiError } from '../api/client';
 import { useToast } from '../components/Toast';
+import { LineChart } from '../components/LineChart';
 import { formatBytes, formatDuration, formatNumber, formatPercent } from '../lib/format';
 import type { MonitoringSummary } from '../types';
 
 const REFRESH_MS = 5000;
+const MAX_POINTS = 30;
+
+interface History {
+  mem: number[];
+  cpu: number[];
+  http: number[];
+}
 
 export function MonitoringPage() {
   const toast = useToast();
   const [data, setData] = useState<MonitoringSummary | null>(null);
+  const [history, setHistory] = useState<History>({ mem: [], cpu: [], http: [] });
   const [auto, setAuto] = useState(true);
   const [updatedAt, setUpdatedAt] = useState<string>('');
   const timer = useRef<number | null>(null);
@@ -19,6 +28,16 @@ export function MonitoringPage() {
       const summary = await monitoringApi.summary();
       setData(summary);
       setUpdatedAt(new Date().toLocaleTimeString('ko-KR'));
+
+      const m = summary.metrics;
+      const memPct = m.jvmMemoryUsed != null && m.jvmMemoryMax ? (m.jvmMemoryUsed / m.jvmMemoryMax) * 100 : 0;
+      const cpuPct = (m.processCpuUsage ?? 0) * 100;
+      const http = m.httpRequestCount ?? 0;
+      setHistory((prev) => ({
+        mem: [...prev.mem, memPct].slice(-MAX_POINTS),
+        cpu: [...prev.cpu, cpuPct].slice(-MAX_POINTS),
+        http: [...prev.http, http].slice(-MAX_POINTS),
+      }));
     } catch (e) {
       toast.error(e instanceof ApiError ? e.message : '모니터링 조회 실패');
     }
@@ -90,13 +109,35 @@ export function MonitoringPage() {
         </div>
       </div>
 
-      <div className="card">
+      <div className="row" style={{ alignItems: 'stretch' }}>
+        <div className="card grow" style={{ minWidth: 320 }}>
+          <div className="card-head"><h2>리소스 사용률 추이 (%)</h2><span className="muted">최근 {history.mem.length}회</span></div>
+          <div style={{ padding: '12px 12px 16px' }}>
+            <LineChart
+              unit="%"
+              yMax={100}
+              series={[
+                { label: 'JVM 메모리', color: '#ea002c', data: history.mem },
+                { label: 'CPU', color: '#ff7a00', data: history.cpu },
+              ]}
+            />
+          </div>
+        </div>
+        <div className="card grow" style={{ minWidth: 320 }}>
+          <div className="card-head"><h2>HTTP 요청 수 추이 (누적)</h2></div>
+          <div style={{ padding: '12px 12px 16px' }}>
+            <LineChart series={[{ label: 'HTTP 요청', color: '#1e5fbf', data: history.http }]} />
+          </div>
+        </div>
+      </div>
+
+      <div className="card" style={{ marginTop: 16 }}>
         <div className="card-head"><h2>안내</h2></div>
         <div className="modal-body">
           <p className="muted" style={{ margin: 0 }}>
             이 지표는 백엔드 <code>/api/admin/monitoring/summary</code>가 Spring Boot Actuator의
-            Health/Metrics를 요약해 제공합니다. Prometheus 연동은 <code>/actuator/prometheus</code>에서
-            수집할 수 있습니다.
+            Health/Metrics를 요약해 제공합니다. 차트는 폴링 시점의 값을 누적해 시계열로 표시하며,
+            Prometheus 연동은 <code>/actuator/prometheus</code>에서 수집할 수 있습니다.
           </p>
         </div>
       </div>

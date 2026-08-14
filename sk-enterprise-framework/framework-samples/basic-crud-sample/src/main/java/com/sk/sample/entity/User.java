@@ -58,6 +58,10 @@ public class User extends BaseEntity {
     @Builder.Default
     private UserRole role = UserRole.USER;
 
+    /** BCrypt 해시된 비밀번호(응답 DTO에는 노출하지 않음) */
+    @Column(name = "password", length = 100)
+    private String password;
+
     /**
      * 사용자 상태.
      */
@@ -101,6 +105,11 @@ public class User extends BaseEntity {
      */
     public void changeStatus(UserStatus status) {
         this.status = status;
+    }
+
+    /** 비밀번호(해시)를 설정합니다. */
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 
     // ===== 상태 편의 메소드 =====
