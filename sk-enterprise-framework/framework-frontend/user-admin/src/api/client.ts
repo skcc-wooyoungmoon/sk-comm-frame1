@@ -71,7 +71,12 @@ async function request<T>(path: string, options: Options = {}): Promise<T> {
         backoff *= 2;
         continue;
       }
-      const message = body?.message ?? `요청 실패 (HTTP ${res.status})`;
+      // 401(미인증/만료)이면 토큰을 폐기하고 로그아웃 이벤트를 알린다.(403 권한부족은 유지)
+      if (res.status === 401) {
+        tokenStore.clear();
+        window.dispatchEvent(new Event('auth:unauthorized'));
+      }
+      const message = body?.message ?? (res.status === 401 ? '세션이 만료되었습니다. 다시 로그인하세요.' : `요청 실패 (HTTP ${res.status})`);
       const code = body?.code ?? String(res.status);
       throw new ApiError(message, code, res.status);
     }

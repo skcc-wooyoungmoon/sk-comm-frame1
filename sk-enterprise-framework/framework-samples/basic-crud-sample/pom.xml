@@ -59,6 +59,27 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- 보안 모듈: JWT (JwtTokenProvider, spring-security 포함) -->
+        <dependency>
+            <groupId>com.sk</groupId>
+            <artifactId>framework-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- JWT 런타임 구현체(파싱/서명/JSON) -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Database -->
         <dependency>
             <groupId>com.h2database</groupId>

@@ -14,7 +14,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState('admin@sk.com');
-  const [password, setPassword] = useState('demo');
+  const [password, setPassword] = useState('password');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -54,7 +54,7 @@ export function LoginPage() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="데모: 아무 값"
+            placeholder="데모 비밀번호: password"
           />
         </label>
 
@@ -63,7 +63,7 @@ export function LoginPage() {
         </button>
 
         <div className="login-demo">
-          <div className="muted" style={{ marginBottom: 6 }}>데모 계정 (비밀번호 미검증)</div>
+          <div className="muted" style={{ marginBottom: 6 }}>데모 계정 (비밀번호: password)</div>
           {DEMO_ACCOUNTS.map((a) => (
             <button
               type="button"

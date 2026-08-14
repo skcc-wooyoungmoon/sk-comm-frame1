@@ -12,14 +12,17 @@ React + Vite + TypeScript로 작성되었으며, 백엔드 샘플(`basic-crud-sa
 | 사용자 관리 | `/users` | user:view / user:manage | 목록/검색/페이징, 등록·수정·삭제, 상태·권한 변경 |
 | 상품 관리 | `/products` | product:view / product:manage | 검색(디바운스), 등록·수정·삭제, 구매(재고차감), CSV 내보내기 |
 | 주문 | `/orders` | order:view | 멱등 주문 생성(재전송 테스트), 주문 조회 |
-| 모니터링 | `/monitoring` | monitoring:view | Actuator 헬스/JVM·CPU·스레드·HTTP·DB 메트릭, 자동 새로고침 |
+| 모니터링 | `/monitoring` | monitoring:view | Actuator 헬스/JVM·CPU·스레드·HTTP·DB 메트릭 + **시계열 라인차트**, 자동 새로고침 |
 | 로그 | `/logs` | log:view | 애플리케이션 로그 뷰어(레벨 필터, 자동 새로고침) |
 
-### 보안 / 인증
-- **로그인/로그아웃**, 토큰(localStorage) 자동 첨부(`Authorization: Bearer`)
+### 보안 / 인증 (실제 JWT)
+- **JWT 로그인/로그아웃**: 백엔드 `framework-security`(HS512)로 실제 토큰 발급, 비밀번호는 **BCrypt** 검증
+- 토큰(localStorage) 자동 첨부(`Authorization: Bearer`), **401 시 자동 로그아웃**(만료/무효 토큰)
 - **역할(Role) 기반 접근제어**: `ADMIN` / `MANAGER` / `USER` → 권한(Permission) 매핑(`src/auth/permissions.ts`)
 - **라우트 가드**(`ProtectedRoute`) + **메뉴/버튼 게이팅**(`useAuth().can(...)`)
-- 프론트 게이팅은 UX용이며 실제 권한 검증은 백엔드가 담당
+- 프론트 게이팅은 UX용이며 **실제 권한 검증은 백엔드 Spring Security**가 수행
+  (예: 사용자 쓰기=ADMIN, 상품/주문 쓰기=ADMIN·MANAGER — 위반 시 403)
+- 데모 계정 비밀번호는 모두 `password`
 
 ### 알고리즘 / 유틸 (`src/lib`)
 - `useDebounce` — 검색 입력 디바운스
@@ -38,7 +41,7 @@ npm install
 npm run dev      # http://localhost:5173
 ```
 
-로그인: `admin@sk.com`(ADMIN) / `manager@sk.com`(MANAGER) / `user1@sk.com`(USER) — 비밀번호는 아무 값(데모).
+로그인: `admin@sk.com`(ADMIN) / `manager@sk.com`(MANAGER) / `user1@sk.com`(USER) — 비밀번호는 모두 `password`.
 
 ## 빌드
 
