@@ -4,6 +4,7 @@ import { ApiError } from '../api/client';
 import { RoleBadge, StatusBadge } from '../components/Badges';
 import { UserFormModal, type UserFormValues } from '../components/UserFormModal';
 import { useToast } from '../components/Toast';
+import { useAuth } from '../auth/AuthContext';
 import type { User, UserRole, UserSearch, UserStatus } from '../types';
 
 const STATUS_OPTIONS: UserStatus[] = ['ACTIVE', 'INACTIVE', 'SUSPENDED'];
@@ -12,6 +13,8 @@ const PAGE_SIZE = 10;
 
 export function UserListPage() {
   const toast = useToast();
+  const { can } = useAuth();
+  const manage = can('user:manage');
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
@@ -127,9 +130,11 @@ export function UserListPage() {
                 🔍 검색
               </button>
             </form>
-            <button className="btn primary" onClick={() => setModal({ mode: 'create' })}>
-              + 사용자 등록
-            </button>
+            {manage && (
+              <button className="btn primary" onClick={() => setModal({ mode: 'create' })}>
+                + 사용자 등록
+              </button>
+            )}
           </div>
         </div>
 
@@ -165,6 +170,9 @@ export function UserListPage() {
                       <RoleBadge role={u.role} />
                     </td>
                     <td>
+                      {!manage ? (
+                        <span className="muted">읽기 전용</span>
+                      ) : (
                       <div className="actions">
                         <button className="btn sm" onClick={() => setModal({ mode: 'edit', user: u })}>
                           수정
@@ -197,6 +205,7 @@ export function UserListPage() {
                           삭제
                         </button>
                       </div>
+                      )}
                     </td>
                   </tr>
                 ))}

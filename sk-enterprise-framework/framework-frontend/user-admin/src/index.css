@@ -122,3 +122,29 @@ td .actions { display: flex; gap: 6px; flex-wrap: wrap; }
 .pagination { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; }
 .row { display: flex; gap: 12px; flex-wrap: wrap; }
 .grow { flex: 1; min-width: 160px; }
+
+/* ===== Login ===== */
+.login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1a1c22, #2a2d36); padding: 20px; }
+.login-card { background: #fff; border-radius: 16px; padding: 32px; width: 100%; max-width: 380px; box-shadow: 0 24px 60px rgba(0,0,0,0.35); display: grid; gap: 14px; }
+.login-brand { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.login-brand .dot { width: 14px; height: 14px; border-radius: 4px; background: var(--sk-red); }
+.login-sub { color: var(--text-muted); margin-top: -6px; margin-bottom: 6px; }
+.login-demo { border-top: 1px solid var(--border); padding-top: 14px; font-size: 13px; }
+
+/* ===== Meter bar ===== */
+.meter { margin-top: 10px; height: 8px; background: #eef0f3; border-radius: 999px; overflow: hidden; }
+.meter > span { display: block; height: 100%; background: linear-gradient(90deg, var(--sk-orange), var(--sk-red)); transition: width 0.4s ease; }
+
+/* ===== Result box ===== */
+.result-box { background: #fafbfc; border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-size: 13px; display: grid; gap: 4px; }
+.result-box b { margin-bottom: 4px; }
+code { background: #f0f2f5; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+
+/* ===== Log viewer ===== */
+.log-view { max-height: 65vh; overflow: auto; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; font-size: 12.5px; }
+.log-row { display: grid; grid-template-columns: 96px 62px 150px 1fr; gap: 10px; padding: 6px 20px; border-bottom: 1px solid #f0f2f5; align-items: start; }
+.log-row:hover { background: #fafbfc; }
+.log-time { color: var(--text-muted); }
+.log-level { justify-self: start; font-size: 11px; }
+.log-logger { color: #5b6572; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.log-msg { white-space: pre-wrap; word-break: break-word; color: var(--text); }
