@@ -149,6 +149,22 @@ npm run preview    # 빌드 결과 미리보기
 
 ---
 
+## 4-1. 컨테이너로 실행 (PostgreSQL + Flyway)
+
+운영 유사 환경(PostgreSQL + Flyway 마이그레이션)은 Docker Compose로 기동합니다.
+
+```bash
+cd sk-enterprise-framework
+docker compose up --build      # postgres + app(dev 프로파일)
+```
+
+- `app`은 `dev` 프로파일로 뜨며 **Flyway가 `db/migration/V1__init.sql`을 적용**한 뒤 JPA는 `validate`만 수행합니다.
+- 접속: http://localhost:8080 (DB: `localhost:5432`, `sk`/`sk_pass`)
+- 환경변수: `DB_URL`/`DB_USER`/`DB_PASSWORD`/`JWT_SECRET`는 `docker-compose.yml`에서 주입합니다.
+  운영에서는 `JWT_SECRET`을 반드시 시크릿으로 교체하세요.
+
+> H2(로컬/테스트)에서는 Flyway가 비활성화되고 `ddl-auto=create-drop`으로 동작합니다.
+
 ## 5. 프로파일 & 환경 설정
 
 `application.yml`은 `local`/`dev`/`prod` 프로파일로 분리되어 있습니다.

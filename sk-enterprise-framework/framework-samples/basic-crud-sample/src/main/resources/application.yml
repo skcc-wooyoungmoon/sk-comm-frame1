@@ -27,6 +27,10 @@ spring:
         format_sql: true
         use_sql_comments: true
 
+  # Flyway는 기본(H2 로컬/테스트)에서 비활성화, dev/prod(PostgreSQL)에서만 활성화
+  flyway:
+    enabled: false
+
   # H2 Console 설정 (개발용)
   h2:
     console:
@@ -99,8 +103,8 @@ sk:
     security:
       enabled: true
       jwt:
-        # HS512 서명 키는 64바이트 이상 필요 (데모용, 운영에서는 환경변수/시크릿으로 주입)
-        secret-key: sk-framework-jwt-hs512-secret-key-please-change-in-production-0123456789
+        # HS512 서명 키는 64바이트 이상 필요. 운영에서는 반드시 JWT_SECRET 환경변수로 주입.
+        secret-key: ${JWT_SECRET:sk-framework-jwt-hs512-secret-key-please-change-in-production-0123456789}
         access-token-expiration: 3600
         issuer: SK Framework
     # 외부 API 설정 예시
@@ -141,9 +145,16 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:postgresql://dev-db:5432/sk_sample
+    url: ${DB_URL:jdbc:postgresql://dev-db:5432/sk_sample}
     username: ${DB_USER:dev_user}
     password: ${DB_PASSWORD:dev_pass}
+  # 스키마는 Flyway가 관리 → JPA는 검증만
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
 
 logging:
   level:
@@ -157,11 +168,17 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:postgresql://prod-db:5432/sk_sample
+    url: ${DB_URL:jdbc:postgresql://prod-db:5432/sk_sample}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     hikari:
       maximum-pool-size: 50
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
 
 logging:
   level:

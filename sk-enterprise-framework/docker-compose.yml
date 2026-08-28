@@ -1,0 +1,39 @@
+# =====================================================================
+# 로컬 운영 유사 환경: PostgreSQL + 애플리케이션(dev 프로파일 + Flyway)
+#   docker compose up --build
+# =====================================================================
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: sk_sample
+      POSTGRES_USER: sk
+      POSTGRES_PASSWORD: sk_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sk -d sk_sample"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://postgres:5432/sk_sample
+      DB_USER: sk
+      DB_PASSWORD: sk_pass
+      JWT_SECRET: sk-framework-jwt-hs512-secret-key-please-change-in-production-0123456789
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:

@@ -1,0 +1,8 @@
+**/target/
+**/node_modules/
+**/dist/
+framework-frontend/
+framework-docs/
+**/*.log
+.git/
+.idea/
