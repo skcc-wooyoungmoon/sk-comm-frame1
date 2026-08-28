@@ -184,4 +184,8 @@ logging:
   level:
     root: ERROR
     com.sk.sample: WARN
+  # 운영: 구조화(JSON) 로깅 - Spring Boot 3.4+ 네이티브(ECS 포맷), 추가 의존성 없음
+  structured:
+    format:
+      console: ecs
 

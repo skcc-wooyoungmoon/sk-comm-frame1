@@ -82,7 +82,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 공개 경로 (/error 를 permit하지 않으면 403/500의 ERROR 디스패치가 401로 뒤바뀐다)
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/refresh").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**",
                                 "/api-docs/**", "/h2-console/**", "/actuator/**").permitAll()
                         // 사용자 관리(쓰기)는 ADMIN

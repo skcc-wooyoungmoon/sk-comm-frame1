@@ -156,6 +156,19 @@ public class UserService extends BaseService<User, Long> {
     }
 
     /**
+     * 비밀번호 변경. 현재 비밀번호를 검증한 뒤 새 비밀번호(BCrypt)로 교체한다.
+     */
+    @Transactional
+    public void changePassword(String email, String currentPassword, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        if (user.getPassword() == null || !passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        user.changePassword(passwordEncoder.encode(newPassword)); // 커밋 시 dirty checking 반영
+    }
+
+    /**
      * 이메일로 사용자 조회
      */
     public UserDto findByEmail(String email) {

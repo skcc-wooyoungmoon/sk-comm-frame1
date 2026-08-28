@@ -36,14 +36,17 @@ class AdminApiIntegrationTest {
     @Autowired
     private ObjectMapper om;
 
-    private String login(String email, String password) throws Exception {
+    private JsonNode loginData(String email, String password) throws Exception {
         MvcResult res = mvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(Map.of("email", email, "password", password))))
                 .andExpect(status().isOk())
                 .andReturn();
-        JsonNode body = om.readTree(res.getResponse().getContentAsString());
-        return body.path("data").path("token").asText();
+        return om.readTree(res.getResponse().getContentAsString()).path("data");
+    }
+
+    private String login(String email, String password) throws Exception {
+        return loginData(email, password).path("token").asText();
     }
 
     private String bearer(String token) {
@@ -98,6 +101,38 @@ class AdminApiIntegrationTest {
         long id1 = placeOrderAndGetId(token, order);
         long id2 = placeOrderAndGetId(token, order); // 동일 orderNo 재요청
         assertThat(id2).isEqualTo(id1); // 멱등: 새 주문이 생기지 않음
+    }
+
+    @Test
+    void refresh_issuesNewAccessToken() throws Exception {
+        String refreshToken = loginData("admin@sk.com", "password").path("refreshToken").asText();
+        assertThat(refreshToken).isNotBlank();
+
+        MvcResult res = mvc.perform(post("/api/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(Map.of("refreshToken", refreshToken))))
+                .andExpect(status().isOk())
+                .andReturn();
+        String newToken = om.readTree(res.getResponse().getContentAsString()).path("data").path("token").asText();
+        assertThat(newToken).isNotBlank();
+    }
+
+    @Test
+    void changePassword_thenLoginWithNewPassword() throws Exception {
+        String token = login("user1@sk.com", "password");
+        // 현재 비밀번호 확인 후 변경
+        mvc.perform(post("/api/auth/password").header("Authorization", bearer(token))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(Map.of("currentPassword", "password", "newPassword", "newpassword123"))))
+                .andExpect(status().isOk());
+        // 새 비밀번호로 로그인 성공
+        mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(Map.of("email", "user1@sk.com", "password", "newpassword123"))))
+                .andExpect(status().isOk());
+        // 기존 비밀번호는 실패(400)
+        mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(Map.of("email", "user1@sk.com", "password", "password"))))
+                .andExpect(status().isBadRequest());
     }
 
     private long placeOrderAndGetId(String token, Map<String, Object> order) throws Exception {
