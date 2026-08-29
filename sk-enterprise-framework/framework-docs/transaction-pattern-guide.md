@@ -351,6 +351,52 @@ String result = transactionSupport.runInTransaction(() -> { ...; return "ok"; })
 
 ---
 
+## 7-1. 운영 구현 전환 (Redis / Kafka)
+
+기본 구현은 단일 JVM용(InMemory 멱등/락, 로그 아웃박스)입니다. 운영에서는 의존성과 프로퍼티만으로
+Redis/Kafka 구현으로 전환할 수 있습니다. (구현체는 `framework-transaction`에 포함, `@ConditionalOnClass`+프로퍼티로 활성화)
+
+### 1) 의존성 추가 (소비 애플리케이션)
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+<dependency>
+  <groupId>org.springframework.kafka</groupId>
+  <artifactId>spring-kafka</artifactId>
+</dependency>
+```
+
+### 2) 프로퍼티로 구현 선택
+```yaml
+spring:
+  data:
+    redis:
+      host: redis
+      port: 6379
+  kafka:
+    bootstrap-servers: kafka:9092
+sk:
+  framework:
+    transaction:
+      idempotency:
+        store: redis      # memory(기본) | redis
+      lock:
+        type: redis       # memory(기본) | redis
+      outbox:
+        publisher: kafka  # logging(기본) | kafka
+```
+
+| 프로퍼티 | 기본 | 운영 | 구현체 |
+|----------|------|------|--------|
+| `...idempotency.store` | `memory` | `redis` | `RedisIdempotencyStore`(SET NX + TTL) |
+| `...lock.type` | `memory` | `redis` | `RedisDistributedLockManager`(SET NX PX + Lua 안전해제) |
+| `...outbox.publisher` | `logging` | `kafka` | `KafkaMessagePublisher`(동기 전송, 실패 시 릴레이 재시도) |
+
+> Redis 락은 임대(lease) 시간 경과 시 자동 해제되어 데드락을 방지하며, 아웃박스는 at-least-once이므로
+> 소비자는 멱등 처리를 전제로 설계해야 합니다.
+
 ## 8. 참고 코드 위치
 
 | 항목 | 경로 |

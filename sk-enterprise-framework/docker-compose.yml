@@ -35,5 +35,24 @@ services:
     ports:
       - "8080:8080"
 
+  # 프론트엔드(Nginx): 정적 서빙 + /api → app 프록시
+  frontend:
+    build:
+      context: ./framework-frontend/user-admin
+    depends_on:
+      - app
+    ports:
+      - "5173:80"
+
+  # ---------------------------------------------------------------
+  # 운영 구현(Redis/Kafka) 전환 시 아래 서비스를 추가하고,
+  # app 환경변수에 SPRING_DATA_REDIS_HOST=redis,
+  # SK_FRAMEWORK_TRANSACTION_IDEMPOTENCY_STORE=redis 등을 주입하세요.
+  # (샘플에는 redis/kafka 스타터가 없으므로 의존성 추가 필요 - 가이드 §7-1 참고)
+  # ---------------------------------------------------------------
+  # redis:
+  #   image: redis:7-alpine
+  #   ports: ["6379:6379"]
+
 volumes:
   pgdata:
