@@ -66,6 +66,18 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- 거래 패턴 운영 구현: Redis(멱등/분산락) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!-- 거래 패턴 운영 구현: Kafka(아웃박스 발행) -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
         <!-- JWT 런타임 구현체(파싱/서명/JSON) -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

@@ -69,6 +69,7 @@ sk-enterprise-framework/
 
 | 문서 | 설명 |
 |------|------|
+| [실행 런북](framework-docs/getting-started-runbook.md) | 로컬(H2) 빠른 실행 + Docker 풀스택(PostgreSQL·Redis·Kafka) 실행/확인 |
 | [거래 패턴 개발 가이드](framework-docs/transaction-pattern-guide.md) | ACID·멱등성·동시성·아웃박스·SAGA 패턴과 프레임워크 사용법 |
 | [개발 환경 셋업 가이드](framework-docs/environment-setup-guide.md) | 백엔드/프론트엔드 빌드·실행·프로파일·트러블슈팅 |
 | [따라하기 튜토리얼](framework-docs/hands-on-tutorial.md) | 거래 패턴으로 "포인트 적립" 기능 만들기(처음부터 끝까지) |
