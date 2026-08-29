@@ -72,6 +72,11 @@ management:
       enabled: true
     prometheus:
       enabled: true
+  # Redis/Kafka 헬스 지표는 기본 비활성화(로컬에서 미기동 시 헬스 DOWN 방지).
+  # docker-compose(운영 유사)에서 실제로 기동되면 정상 동작하며, 필요 시 true로 켤 수 있음.
+  health:
+    redis:
+      enabled: false
   metrics:
     export:
       prometheus:
