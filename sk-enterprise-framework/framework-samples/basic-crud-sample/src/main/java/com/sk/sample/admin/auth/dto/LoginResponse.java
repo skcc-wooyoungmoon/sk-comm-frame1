@@ -15,6 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class LoginResponse {
-    private String token;
+    private String token;         // 액세스 토큰
+    private String refreshToken;  // 리프레시 토큰
     private UserDto user;
 }

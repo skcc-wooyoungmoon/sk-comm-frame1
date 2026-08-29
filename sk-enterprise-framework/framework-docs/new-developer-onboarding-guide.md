@@ -38,7 +38,7 @@
 
 ### 💻 시스템 요구사항
 - [ ] **OS**: Windows 10+, macOS 10.14+, Ubuntu 18.04+
-- [ ] **Java**: OpenJDK 17 이상
+- [ ] **Java**: OpenJDK 25 (LTS)
 - [ ] **메모리**: 최소 8GB RAM (권장 16GB)
 - [ ] **디스크**: 최소 10GB 여유 공간
 - [ ] **네트워크**: 인터넷 연결 (Maven 의존성 다운로드용)
@@ -49,23 +49,23 @@
 
 ### 📥 Step 1: 필수 소프트웨어 설치
 
-#### 2.1 Java 17 설치
+#### 2.1 Java 25 (LTS) 설치
 ```bash
 # Windows (Chocolatey 사용)
-choco install openjdk17
+choco install openjdk25
 
 # macOS (Homebrew 사용)
-brew install openjdk@17
+brew install openjdk@25
 
 # Ubuntu
 sudo apt update
-sudo apt install openjdk-17-jdk
+sudo apt install openjdk-25-jdk
 ```
 
 **설치 확인:**
 ```bash
 java -version
-# 출력 예시: openjdk version "17.0.x" 2023-xx-xx
+# 출력 예시: openjdk version "25" 2025-09-16 LTS
 ```
 
 #### 2.2 IntelliJ IDEA 설치 (권장)
@@ -776,7 +776,7 @@ logging:
 학습 완료 후 다음 항목들을 체크해보세요:
 
 ### 환경 설정
-- [ ] Java 17 설치 및 설정 완료
+- [ ] Java 25 설치 및 설정 완료
 - [ ] IntelliJ IDEA 설치 및 프로젝트 열기 완료
 - [ ] Git 설치 및 저장소 클론 완료
 - [ ] Maven 빌드 성공 확인

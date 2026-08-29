@@ -1,6 +1,7 @@
 package com.sk.framework.web.config;
 
 import com.sk.framework.web.exception.GlobalExceptionHandler;
+import com.sk.framework.web.filter.TraceIdFilter;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -33,6 +34,15 @@ public class WebAutoConfiguration {
     @ConditionalOnMissingBean
     public GlobalExceptionHandler globalExceptionHandler() {
         return new GlobalExceptionHandler();
+    }
+
+    /**
+     * 요청별 traceId를 MDC에 세팅하는 필터. 로그 상관/분산 추적에 사용됩니다.
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public TraceIdFilter traceIdFilter() {
+        return new TraceIdFilter();
     }
 
 }

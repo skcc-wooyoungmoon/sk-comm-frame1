@@ -8,7 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
  * @author SK Framework Team
  * @since 1.0.0
  */
-@Component
 public class JwtTokenProvider {
     
     private final SecurityProperties securityProperties;

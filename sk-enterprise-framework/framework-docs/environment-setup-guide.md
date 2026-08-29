@@ -12,20 +12,25 @@
 
 | 도구 | 버전 | 확인 명령 |
 |------|------|-----------|
-| JDK | 17 이상 (21 권장) | `java -version` |
+| JDK | **25** (LTS) | `java -version` |
 | Maven | 3.9 이상 | `mvn -version` |
 | Node.js | 20 이상 (22 권장) | `node -v` |
 | npm | 10 이상 | `npm -v` |
 | Git | 2.x | `git --version` |
 | IDE | IntelliJ IDEA / VS Code | - |
 
-### 1.1 JDK 설치
+### 1.1 JDK 설치 (JDK 25 LTS 필수)
 
-- macOS: `brew install openjdk@21`
-- Windows: [Adoptium Temurin 21](https://adoptium.net/) 설치
-- Linux: `sudo apt install openjdk-21-jdk`
+- macOS: `brew install openjdk@25`
+- Windows: [Adoptium Temurin 25](https://adoptium.net/) 설치
+- Linux: `sudo apt install openjdk-25-jdk` (또는 Temurin 25 tarball)
 
-`JAVA_HOME`을 설정하고 `java -version`이 17+ 를 가리키는지 확인합니다.
+`JAVA_HOME`을 JDK 25로 설정하고 `java -version`이 **25** 를 가리키는지 확인합니다.
+
+> 이 프로젝트는 Java 25(LTS)로 빌드/실행됩니다. Spring Boot **3.5.6**을 사용하며,
+> JDK 23+에서 애노테이션 프로세서(Lombok 등)가 기본 비활성화되는 변경에 대응해
+> 루트 pom의 `maven-compiler-plugin`에 `annotationProcessorPaths`를 명시했습니다.
+> JDK 25 미만에서는 빌드되지 않습니다.
 
 ### 1.2 Maven / Node 설치
 
@@ -143,6 +148,22 @@ npm run preview    # 빌드 결과 미리보기
 ```
 
 ---
+
+## 4-1. 컨테이너로 실행 (PostgreSQL + Flyway)
+
+운영 유사 환경(PostgreSQL + Flyway 마이그레이션)은 Docker Compose로 기동합니다.
+
+```bash
+cd sk-enterprise-framework
+docker compose up --build      # postgres + app(dev 프로파일)
+```
+
+- `app`은 `dev` 프로파일로 뜨며 **Flyway가 `db/migration/V1__init.sql`을 적용**한 뒤 JPA는 `validate`만 수행합니다.
+- 접속: http://localhost:8080 (DB: `localhost:5432`, `sk`/`sk_pass`)
+- 환경변수: `DB_URL`/`DB_USER`/`DB_PASSWORD`/`JWT_SECRET`는 `docker-compose.yml`에서 주입합니다.
+  운영에서는 `JWT_SECRET`을 반드시 시크릿으로 교체하세요.
+
+> H2(로컬/테스트)에서는 Flyway가 비활성화되고 `ddl-auto=create-drop`으로 동작합니다.
 
 ## 5. 프로파일 & 환경 설정
 

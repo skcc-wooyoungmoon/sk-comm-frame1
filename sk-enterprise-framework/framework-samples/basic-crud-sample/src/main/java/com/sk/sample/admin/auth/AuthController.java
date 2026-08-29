@@ -2,8 +2,11 @@ package com.sk.sample.admin.auth;
 
 import com.sk.framework.common.dto.ApiResponse;
 import com.sk.framework.security.jwt.JwtTokenProvider;
+import com.sk.framework.security.jwt.JwtTokenProvider.TokenType;
 import com.sk.sample.admin.auth.dto.LoginRequest;
 import com.sk.sample.admin.auth.dto.LoginResponse;
+import com.sk.sample.admin.auth.dto.PasswordChangeRequest;
+import com.sk.sample.admin.auth.dto.RefreshRequest;
 import com.sk.sample.dto.UserDto;
 import com.sk.sample.entity.User;
 import com.sk.sample.repository.UserRepository;
@@ -58,12 +61,43 @@ public class AuthController {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 user.getEmail(), null,
                 List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())));
-        String token = jwtTokenProvider.generateAccessToken(authentication);
+        String accessToken = jwtTokenProvider.generateAccessToken(authentication);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 
         return ResponseEntity.ok(ApiResponse.success("로그인 성공", LoginResponse.builder()
-                .token(token)
+                .token(accessToken)
+                .refreshToken(refreshToken)
                 .user(userService.convertToDto(user))
                 .build()));
+    }
+
+    @Operation(summary = "액세스 토큰 재발급", description = "refreshToken으로 새 액세스 토큰을 발급합니다.")
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<LoginResponse>> refresh(@Valid @RequestBody RefreshRequest request) {
+        String refreshToken = request.getRefreshToken();
+        if (!jwtTokenProvider.validateToken(refreshToken)
+                || jwtTokenProvider.isTokenExpired(refreshToken)
+                || jwtTokenProvider.getTokenType(refreshToken) != TokenType.REFRESH) {
+            throw new IllegalArgumentException("유효하지 않은 리프레시 토큰입니다.");
+        }
+        // 리프레시 토큰의 권한 정보를 기반으로 새 액세스 토큰 발급
+        Authentication authentication = jwtTokenProvider.getAuthenticationFromToken(refreshToken);
+        String newAccessToken = jwtTokenProvider.generateAccessToken(authentication);
+        return ResponseEntity.ok(ApiResponse.success("재발급 성공", LoginResponse.builder()
+                .token(newAccessToken)
+                .refreshToken(refreshToken)
+                .build()));
+    }
+
+    @Operation(summary = "비밀번호 변경", description = "현재 비밀번호 확인 후 새 비밀번호로 변경합니다.")
+    @PostMapping("/password")
+    public ResponseEntity<ApiResponse<Void>> changePassword(@Valid @RequestBody PasswordChangeRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalArgumentException("인증 정보가 없습니다.");
+        }
+        userService.changePassword(authentication.getName(), request.getCurrentPassword(), request.getNewPassword());
+        return ResponseEntity.ok(ApiResponse.success("비밀번호가 변경되었습니다.", null));
     }
 
     @Operation(summary = "내 정보", description = "JWT로 인증된 현재 사용자를 조회합니다.")
