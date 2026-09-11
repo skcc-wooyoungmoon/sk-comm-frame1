@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AutoTrader</string>
+    <string name="channel_trading_name">자동매매 실행</string>
+    <string name="channel_trading_desc">자동매매 엔진이 동작 중임을 알립니다.</string>
+    <string name="channel_alert_name">매매 알림</string>
+    <string name="channel_alert_desc">주문 체결, 손절, 한도 도달 등을 알립니다.</string>
+</resources>
